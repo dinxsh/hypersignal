@@ -130,7 +130,16 @@ cd dashboard && npm run dev                      # terminal 2
 
 The API key never reaches the browser: the FastAPI backend holds it and the Vite dev server proxies `/api`.
 
-### Deploy everything to Vercel (one project)
+### Deploy to Vercel — simplest, fully live, no backend
+
+GoldRush's APIs send open CORS headers, so the dashboard can fetch **live data directly from the browser** — no backend, no Python, no serverless. This is the most reliable path:
+
+1. New Vercel project → import `dinxsh/hypersignal` → **Root Directory: `dashboard`** (auto-detected as Vite).
+2. Add env var **`VITE_GOLDRUSH_API_KEY`** = your key → Deploy.
+
+Done — the badge reads **LIVE · GoldRush** and refreshes every 30s. The key ships in the JS bundle (extractable), so use a **rotatable / usage-capped** key for public deploys. If `VITE_GOLDRUSH_API_KEY` is unset, the dashboard falls back to a backend (`VITE_API_URL`) and then the bundled snapshot.
+
+### Deploy everything to Vercel (one project, key stays server-side)
 
 The whole thing — dashboard **and** API — runs as a **single Vercel project**. The FastAPI app serves the built dashboard at `/` and the live API at `/report`, `/signal`, etc. The built dashboard (`dashboard/dist`) is committed so Vercel doesn't need to run a Node build.
 

@@ -36,14 +36,19 @@ npm run build && npm run preview
 
 ## Deploy (Vercel)
 
-This dashboard is **one of two Vercel projects** (the other is the FastAPI API). Create a Vercel project for this folder with **Root Directory: `dashboard`** — Vercel auto-detects Vite. Set env var **`VITE_API_URL`** to the API project's URL for live data; without it the dashboard renders the bundled snapshot (`src/sample-report.json`).
+Deploy this folder as a **static Vite site** and set one env var. The dashboard calls GoldRush **directly from the browser** (open CORS), so there's no backend, no Python, no serverless — and it shows **live** data.
+
+1. New Vercel project → import the repo → **Root Directory: `dashboard`** (auto-detected as Vite).
+2. **Environment Variables** → add **`VITE_GOLDRUSH_API_KEY`** = your key → Deploy.
 
 ```bash
-vercel          # Root Directory: dashboard
-# set VITE_API_URL = https://<your-api-project>.vercel.app
+vercel                                   # Root Directory: dashboard
+vercel env add VITE_GOLDRUSH_API_KEY     # then redeploy
 ```
 
-Full two-project walkthrough: see the root README's "Deploy everything to Vercel".
+Badge reads **LIVE · GoldRush**, refreshes every 30s.
+
+> **Security:** this key ships in the built JS bundle (extractable) — use a rotatable / usage-capped key for public deploys. To keep the key server-side instead, leave `VITE_GOLDRUSH_API_KEY` unset and point `VITE_API_URL` at a hypersignal backend; the dashboard then falls back backend → snapshot.
 
 ## Data provenance
 

@@ -1,4 +1,5 @@
 import { sinceNow } from "../format";
+import type { Source } from "../api";
 
 export function TopBar({
   mode,
@@ -9,13 +10,13 @@ export function TopBar({
   refreshing,
 }: {
   mode: "live" | "offline";
-  source: "live-backend" | "sample";
+  source: Source;
   generatedAt: string;
   latencyMs: number | null;
   onRefresh: () => void;
   refreshing: boolean;
 }) {
-  const isLive = source === "live-backend" && mode === "live";
+  const isLive = source !== "sample" && mode === "live";
   return (
     <header className="topbar">
       <div className="brand">
