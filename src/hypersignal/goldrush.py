@@ -131,5 +131,19 @@ class InfoClient:
             {"type": "userNonFundingLedgerUpdates", "user": user, "startTime": start_time_ms}
         )
 
+    def candle_snapshot(self, coin: str, interval: str, start_ms: int, end_ms: int) -> list[dict[str, Any]]:
+        """Historical OHLCV candles for a coin/interval window."""
+        return self.info(
+            {"type": "candleSnapshot", "req": {"coin": coin, "interval": interval, "startTime": start_ms, "endTime": end_ms}}
+        )
+
+    def l2_book(self, coin: str) -> dict[str, Any]:
+        """Aggregated L2 order book snapshot for one coin."""
+        return self.info({"type": "l2Book", "coin": coin})
+
+    def user_fills(self, user: str) -> list[dict[str, Any]]:
+        """Most recent fills for a wallet (up to 2,000)."""
+        return self.info({"type": "userFills", "user": user})
+
     def close(self) -> None:
         self._client.close()

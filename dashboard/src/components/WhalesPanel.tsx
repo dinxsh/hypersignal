@@ -54,6 +54,17 @@ export function WhalesPanel({ data }: { data: WhaleSnapshot }) {
             {data.near_liquidation}
           </div>
         </div>
+        <div className="cell">
+          <div className="k">Whale AUM tracked</div>
+          <div className="v">{usdCompact(data.total_account_value_usd)}</div>
+        </div>
+        <div className="cell">
+          <div className="k">Wallets w/ HYPE</div>
+          <div className="v">
+            {data.wallets_with_position}
+            <span style={{ color: "var(--faint)" }}>/{data.wallets_scanned}</span>
+          </div>
+        </div>
       </div>
     </Panel>
   );

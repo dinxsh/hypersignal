@@ -29,6 +29,7 @@ export interface WhaleSnapshot {
   market: MarketContext;
   wallets_scanned: number;
   wallets_with_position: number;
+  total_account_value_usd: number;
   long_notional_usd: number;
   short_notional_usd: number;
   net_notional_usd: number;
@@ -73,6 +74,73 @@ export interface RegimeSignal {
   net_flow_usd: number;
 }
 
+export interface MarketRow {
+  coin: string;
+  mark_price: number;
+  change_24h_pct: number;
+  funding_rate: number;
+  open_interest_usd: number;
+  day_volume_usd: number;
+}
+export interface MarketsOverview {
+  rows: MarketRow[];
+}
+
+export interface Candle {
+  t: number;
+  o: number;
+  h: number;
+  l: number;
+  c: number;
+  v: number;
+}
+export interface PriceSeries {
+  coin: string;
+  interval: string;
+  candles: Candle[];
+  last: number;
+  change_pct: number;
+  high: number;
+  low: number;
+}
+
+export interface BookLevel {
+  px: number;
+  sz: number;
+}
+export interface OrderBook {
+  coin: string;
+  mid: number;
+  spread: number;
+  spread_bps: number;
+  bids: BookLevel[];
+  asks: BookLevel[];
+  bid_depth: number;
+  ask_depth: number;
+}
+
+export interface WhaleFill {
+  coin: string;
+  dir: string;
+  side: string;
+  px: number;
+  sz: number;
+  usd: number;
+  closed_pnl: number;
+  time_ms: number;
+}
+export interface WhaleTape {
+  wallet: string;
+  fills: WhaleFill[];
+}
+
+export interface MarketBundle {
+  overview: MarketsOverview;
+  price: PriceSeries;
+  orderbook: OrderBook;
+  tape: WhaleTape;
+}
+
 export interface HyperSignalReport {
   generated_at: string;
   mode: "live" | "offline";
@@ -80,4 +148,5 @@ export interface HyperSignalReport {
   lending: LendingSnapshot;
   whales: WhaleSnapshot;
   flows: FlowSnapshot;
+  market: MarketBundle;
 }

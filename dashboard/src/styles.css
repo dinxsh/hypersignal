@@ -384,6 +384,76 @@ body::after {
   grid-template-columns: repeat(3, 1fr);
   gap: 18px;
 }
+.grid-2a {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: 2.1fr 1fr;
+  gap: 18px;
+}
+.grid-2b {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: 1.55fr 1fr;
+  gap: 18px;
+}
+
+/* order book */
+.ob {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.ob-side {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ob-row {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.ob-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  opacity: 0.16;
+}
+.ob-fill.bid { background: var(--mint); }
+.ob-fill.ask { background: var(--coral); }
+.ob-px { position: relative; z-index: 1; }
+.ob-sz { position: relative; z-index: 1; color: var(--muted); }
+.ob-mid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  margin: 3px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.ob-spread {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.ob-midpx {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* markets + tape table column widths */
+.mkt-tbl { table-layout: fixed; }
+.tape-tbl { table-layout: fixed; }
 
 .panel {
   background: linear-gradient(180deg, var(--panel-2), var(--panel));
@@ -667,4 +737,6 @@ body::after {
 @media (max-width: 1020px) {
   .hero { grid-template-columns: 1fr; }
   .grid3 { grid-template-columns: 1fr; }
+  .grid-2a,
+  .grid-2b { grid-template-columns: 1fr; }
 }

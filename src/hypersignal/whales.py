@@ -35,6 +35,7 @@ class WhaleSnapshot(BaseModel):
     market: MarketContext
     wallets_scanned: int
     wallets_with_position: int
+    total_account_value_usd: float
     long_notional_usd: float
     short_notional_usd: float
     net_notional_usd: float
@@ -73,10 +74,12 @@ def parse_whales(
     long_usd = short_usd = 0.0
     with_position = 0
     near_liq = 0
+    total_av = 0.0
 
     for slot in states:
         if not isinstance(slot, dict) or slot.get("error"):
             continue  # upstream batch slot error -> skip this wallet
+        total_av += _f(slot.get("marginSummary", {}).get("accountValue"))
         for ap in slot.get("assetPositions", []):
             pos = ap.get("position", {})
             if pos.get("coin") != coin:
@@ -108,6 +111,7 @@ def parse_whales(
         market=market,
         wallets_scanned=len(states),
         wallets_with_position=with_position,
+        total_account_value_usd=round(total_av, 2),
         long_notional_usd=round(long_usd, 2),
         short_notional_usd=round(short_usd, 2),
         net_notional_usd=round(net, 2),

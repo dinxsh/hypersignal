@@ -32,6 +32,11 @@ export function fundingHourly(n: number): string {
   return `${n >= 0 ? "+" : ""}${(n * 100).toFixed(4)}%/hr`;
 }
 
+export function clockTime(ms: number): string {
+  const d = new Date(ms);
+  return d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false });
+}
+
 export function sinceNow(iso: string): string {
   const then = new Date(iso).getTime();
   const secs = Math.max(0, Math.round((Date.now() - then) / 1000));

@@ -106,7 +106,18 @@ See [`examples/agent_consumer.py`](examples/agent_consumer.py) for a minimal all
 
 ## Dashboard
 
-A custom **Vite + React** cockpit lives in [`dashboard/`](dashboard/) — a dark quant-terminal UI built for Harmonix's vault allocator: a regime verdict, a directional-bias gauge, the **agent directive** (ADD / HOLD / REDUCE / DE-RISK), and the three source panels each labelled with the GoldRush endpoint behind it.
+A custom **Vite + React** cockpit lives in [`dashboard/`](dashboard/) — a dark quant-terminal UI built for Harmonix's vault allocator. Every panel is live GoldRush data, labelled with the endpoint behind it:
+
+| Panel | GoldRush endpoint |
+|---|---|
+| Regime verdict + directional-bias gauge + agent directive (ADD/HOLD/REDUCE/DE-RISK) | fusion of all of the below |
+| HYPE price chart (72h OHLCV) | Info · `candleSnapshot` |
+| HYPE order book (depth + spread) | Info · `l2Book` |
+| HyperEVM lending APRs | Foundational · `events/address` |
+| HyperCore whale positioning + AUM tracked | Info · `batchClearinghouseState` + `metaAndAssetCtxs` |
+| Large deposit/withdrawal flows | Info · `userNonFundingLedgerUpdates` |
+| Top perps markets (price/24h/funding/OI/vol) | Info · `metaAndAssetCtxs` |
+| Whale trade tape (recent fills) | Info · `userFills` |
 
 ```bash
 # standalone — bundled real snapshot, no key needed

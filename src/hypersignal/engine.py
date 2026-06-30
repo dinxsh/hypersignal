@@ -17,6 +17,14 @@ from .config import Settings, TARGET_COIN
 from .flows import FlowSnapshot, fetch_flows, parse_flows
 from .goldrush import FoundationalClient, InfoClient
 from .lending import LendingSnapshot, fetch_lending, parse_lending
+from .market import (
+    MarketBundle,
+    fetch_market,
+    parse_candles,
+    parse_fills,
+    parse_markets,
+    parse_orderbook,
+)
 from .signal import RegimeSignal, build_signal
 from .whales import WhaleSnapshot, fetch_whales, parse_whales
 
@@ -28,6 +36,7 @@ class HyperSignalReport(BaseModel):
     lending: LendingSnapshot
     whales: WhaleSnapshot
     flows: FlowSnapshot
+    market: MarketBundle
 
 
 def _fixture(name: str):
@@ -49,6 +58,12 @@ def run(settings: Settings, *, offline: bool = False, coin: str = TARGET_COIN) -
             coin,
         )
         flows = parse_flows(_fixture("ledger_updates.json"), settings)
+        market = MarketBundle(
+            overview=parse_markets(_fixture("market_meta.json"), top=10, target=coin),
+            price=parse_candles(_fixture("candles.json"), coin, "1h"),
+            orderbook=parse_orderbook(_fixture("orderbook.json"), coin),
+            tape=parse_fills(_fixture("fills.json"), settings.whale_watchlist[0] if settings.whale_watchlist else ""),
+        )
     else:
         if not settings.api_key:
             raise RuntimeError(
@@ -79,13 +94,22 @@ def run(settings: Settings, *, offline: bool = False, coin: str = TARGET_COIN) -
             finally:
                 c.close()
 
-        with ThreadPoolExecutor(max_workers=3) as ex:
+        def _market():
+            c = InfoClient(settings.api_key, base_url=settings.info_base_url)
+            try:
+                return fetch_market(c, settings, coin)
+            finally:
+                c.close()
+
+        with ThreadPoolExecutor(max_workers=4) as ex:
             f_lending = ex.submit(_lending)
             f_whales = ex.submit(_whales)
             f_flows = ex.submit(_flows)
+            f_market = ex.submit(_market)
             lending = f_lending.result()
             whales = f_whales.result()
             flows = f_flows.result()
+            market = f_market.result()
 
     signal = build_signal(lending, whales, flows, settings, coin)
     return HyperSignalReport(
@@ -95,4 +119,5 @@ def run(settings: Settings, *, offline: bool = False, coin: str = TARGET_COIN) -
         lending=lending,
         whales=whales,
         flows=flows,
+        market=market,
     )
