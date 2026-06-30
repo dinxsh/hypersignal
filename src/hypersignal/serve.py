@@ -12,9 +12,24 @@ import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from .config import Settings, TARGET_COIN
 from .engine import run
+
+
+def _dashboard_dist() -> str | None:
+    """Locate the built dashboard (dashboard/dist) for single-project deploys."""
+    here = os.path.dirname(__file__)
+    candidates = [
+        os.environ.get("DASHBOARD_DIST"),
+        os.path.join(here, "..", "..", "dashboard", "dist"),  # repo layout
+        os.path.join(os.getcwd(), "dashboard", "dist"),
+    ]
+    for c in candidates:
+        if c and os.path.isfile(os.path.join(c, "index.html")):
+            return c
+    return None
 
 
 def create_app(*, offline: bool | None = None) -> FastAPI:
@@ -41,16 +56,6 @@ def create_app(*, offline: bool | None = None) -> FastAPI:
     def _report(coin: str):
         return run(Settings.from_env(), offline=offline, coin=coin)
 
-    @api.get("/")
-    def index():
-        return {
-            "service": "hypersignal",
-            "description": "GoldRush-powered Hyperliquid regime signal API",
-            "mode": "offline" if offline else "live",
-            "endpoints": ["/report", "/signal", "/lending", "/whales", "/flows", "/healthz", "/docs"],
-            "source": "https://github.com/dinxsh/hypersignal",
-        }
-
     @api.get("/signal")
     def signal(coin: str = TARGET_COIN):
         return _report(coin).signal
@@ -74,6 +79,23 @@ def create_app(*, offline: bool | None = None) -> FastAPI:
     @api.get("/healthz")
     def healthz():
         return {"ok": True, "mode": "offline" if offline else "live"}
+
+    # If the built dashboard is present, serve it at / (single Vercel project:
+    # dashboard at /, API at /report). Mounted last so the API routes above win.
+    dist = _dashboard_dist()
+    if dist:
+        api.mount("/", StaticFiles(directory=dist, html=True), name="dashboard")
+    else:
+
+        @api.get("/")
+        def index():
+            return {
+                "service": "hypersignal",
+                "description": "GoldRush-powered Hyperliquid regime signal API",
+                "mode": "offline" if offline else "live",
+                "endpoints": ["/report", "/signal", "/lending", "/whales", "/flows", "/healthz", "/docs"],
+                "source": "https://github.com/dinxsh/hypersignal",
+            }
 
     return api
 

@@ -1,7 +1,7 @@
-# This applies to the API (Python/FastAPI) Vercel project, whose Root
-# Directory is the repo root. It deploys api/index.py + src/** + requirements.
-# The dashboard is a SEPARATE Vercel project with Root Directory "dashboard",
-# so it is excluded here.
+# Single Vercel project: one @vercel/python function (api/index.py) whose
+# FastAPI app serves the built dashboard at / and the API at /report.
+# Everything not excluded here is bundled (includeFiles "**" in vercel.json),
+# so keep dashboard/dist and src/ — but drop everything not needed at runtime.
 .venv/
 _live/
 __pycache__/
@@ -11,4 +11,9 @@ __pycache__/
 .github/
 tests/
 scripts/
-dashboard/
+dashboard/node_modules/
+dashboard/src/
+dashboard/public/
+dashboard/*.config.*
+dashboard/tsconfig*.json
+dashboard/package*.json

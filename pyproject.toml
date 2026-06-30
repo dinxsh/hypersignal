@@ -38,9 +38,3 @@ packages = ["src/hypersignal"]
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
-
-# Vercel: deploy the repo root as a Python project. This names the single
-# FastAPI entrypoint so Vercel's detection isn't ambiguous (api/index.py also
-# wraps it; serve.py/cli.py are unrelated `app`s).
-[tool.vercel]
-entrypoint = "api.index:app"

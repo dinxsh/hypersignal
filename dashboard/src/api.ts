@@ -1,8 +1,12 @@
 import type { HyperSignalReport } from "./types";
 import sample from "./sample-report.json";
 
-// Default to the Vite dev proxy (/api -> FastAPI). Override with VITE_API_URL.
-const API_BASE = import.meta.env.VITE_API_URL ?? "/api";
+// API base resolution:
+// - VITE_API_URL set            -> use it (two-project deploy: dashboard + API)
+// - dev                         -> "/api" (Vite proxy -> local FastAPI :8000)
+// - production, no VITE_API_URL  -> "" same-origin (single Vercel project where
+//                                   FastAPI serves this built dashboard at / )
+const API_BASE = import.meta.env.VITE_API_URL ?? (import.meta.env.DEV ? "/api" : "");
 
 export interface FetchResult {
   report: HyperSignalReport;

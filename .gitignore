@@ -22,6 +22,10 @@ dist/
 # tsc -b composite emit from vite.config.ts
 dashboard/vite.config.js
 dashboard/vite.config.d.ts
+# ...but DO commit the built dashboard: Vercel's Python builder serves it as
+# static files (it can't run npm), so the single-project deploy needs it.
+!dashboard/dist/
+!dashboard/dist/**
 
 # Scratch (live API response captures)
 _live/

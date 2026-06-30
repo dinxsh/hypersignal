@@ -119,34 +119,32 @@ cd dashboard && npm run dev                      # terminal 2
 
 The API key never reaches the browser: the FastAPI backend holds it and the Vite dev server proxies `/api`.
 
-### Deploy everything to Vercel
+### Deploy everything to Vercel (one project)
 
-Run both the API and the dashboard on Vercel as **two projects from this one repo**. Each gets its own Root Directory, so Vercel's framework detection stays unambiguous (the failure mode when you try to make one project be both a Python app and a static site).
+The whole thing — dashboard **and** API — runs as a **single Vercel project**. The FastAPI app serves the built dashboard at `/` and the live API at `/report`, `/signal`, etc. The built dashboard (`dashboard/dist`) is committed so Vercel doesn't need to run a Node build.
 
-**Project 1 — API (FastAPI, Python).** Live HYPE data, rate-limit-free, behind your key.
+1. Vercel → **Add New Project** → import `dinxsh/hypersignal` → **Root Directory: `.`** (repo root) → **Deploy**.
+   - [`vercel.json`](vercel.json) builds one Python function ([`api/index.py`](api/index.py)) via `@vercel/python` and routes every path to it. The explicit `builds` block turns off Vercel's framework auto-detection (which otherwise tries to force a single FastAPI entrypoint).
+2. Add Environment Variable **`GOLDRUSH_API_KEY`** = your key → redeploy.
 
-1. New Project → import `dinxsh/hypersignal` → **Root Directory: `.`** (repo root).
-2. Vercel detects Python and uses the entrypoint declared in [`pyproject.toml`](pyproject.toml) (`[tool.vercel] entrypoint = "api.index:app"` → [`api/index.py`](api/index.py)), installing [`requirements.txt`](requirements.txt).
-3. Add Environment Variable **`GOLDRUSH_API_KEY`** = your key. Deploy.
-4. You now have e.g. `https://hypersignal-api.vercel.app` serving `GET /report`, `/signal`, `/healthz`. Without the key it serves fixtures; with it, live (≈4–5s/request, edge-friendly).
+That's it — **one URL**:
 
-**Project 2 — Dashboard (static, Vite).**
+| Path | Serves |
+|---|---|
+| `/` | the dashboard (HYPE Regime Cockpit) |
+| `/report`, `/signal`, `/lending`, `/whales`, `/flows` | the live JSON API |
+| `/healthz`, `/docs` | health + Swagger UI |
 
-1. New Project → import the same repo → **Root Directory: `dashboard`**.
-2. Vercel auto-detects Vite (build `npm run build`, output `dist`).
-3. Add Environment Variable **`VITE_API_URL`** = Project 1's URL (e.g. `https://hypersignal-api.vercel.app`). Deploy.
-4. The dashboard fetches `${VITE_API_URL}/report` and renders live. If the API is unreachable it falls back to the bundled snapshot, so it never blanks.
+Without the key it serves fixtures (so the deploy works immediately); with the key it's live (~4–5s/request, three GoldRush modules fetched concurrently). The dashboard calls the API same-origin, so there's nothing else to configure.
 
 ```bash
-# the same, from the CLI (run twice, pick the root dir each time)
 npm i -g vercel
-vercel            # Project 1: root ".",  set GOLDRUSH_API_KEY
-vercel            # Project 2: root "dashboard", set VITE_API_URL
+vercel            # root ".", then set GOLDRUSH_API_KEY in project settings
 ```
 
-The key lives only in the API project's env — the browser only ever sees report JSON (CORS is open on the API). `.vercelignore` keeps `dashboard/` out of the API build and vice versa.
-
-> **Timeout note:** a live `/report` is ~4–5s (three GoldRush modules fetched concurrently). That fits Vercel's default function limit; if you grow the whale watchlist into the thousands, raise the function `maxDuration` or move flows to the [Pipeline API](https://goldrush.dev/docs/goldrush-pipeline-api/normalizers/hypercore).
+> **Rebuilding the dashboard:** the committed `dashboard/dist` is what Vercel serves. After changing dashboard code, run `cd dashboard && npm run build` and commit the new `dist`.
+>
+> **Two-project alternative:** for CDN-cached static assets, deploy `dashboard/` as its own Vite project (Root Directory `dashboard`) and set `VITE_API_URL` to this API's URL — the dashboard uses it automatically.
 
 ## Scaling up
 
