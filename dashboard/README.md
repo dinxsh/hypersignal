@@ -36,14 +36,19 @@ npm run build && npm run preview
 
 ## Deploy (Vercel)
 
-Deploy from the **repo root** (not this folder) — the root [`vercel.json`](../vercel.json) builds this dashboard and wires up the `/api/report` Python serverless function:
+Deploy from the **repo root** — the root [`vercel.json`](../vercel.json) builds this dashboard to static files. The deployed site renders the bundled real snapshot (`src/sample-report.json`); no key or backend needed.
 
 ```bash
-vercel                              # from repo root
-vercel env add GOLDRUSH_API_KEY     # optional → live data
+vercel        # from repo root
 ```
 
-Without a key the deployment serves recorded fixtures and the dashboard falls back to a bundled real snapshot, so the site always renders. See the root README's "Deploy to Vercel".
+For a hosted dashboard with **live** data, run the backend elsewhere and build against it:
+
+```bash
+VITE_API_URL=https://your-backend.example.com npm run build
+```
+
+See the root README's "Deploy to Vercel" for the full rationale.
 
 ## Data provenance
 

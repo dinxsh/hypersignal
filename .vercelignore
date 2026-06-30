@@ -1,21 +1,20 @@
+# Vercel deploys ONLY the static dashboard. Everything Python — the engine,
+# the serverless function, the FastAPI/CLI backend — is excluded so Vercel's
+# Python/FastAPI auto-detection never fires. The dashboard renders the bundled
+# real snapshot; for live data on a hosted deploy, run the backend elsewhere
+# and point VITE_API_URL at it (see README).
 .venv/
 _live/
 __pycache__/
 *.pyc
 .pytest_cache/
-tests/
-scripts/
-dashboard/node_modules/
-dashboard/dist/
 *.egg-info/
 .github/
-
-# Keep Vercel's FastAPI auto-detection from triggering. The serverless function
-# (api/report.py) imports the hypersignal engine from src/** via includeFiles and
-# installs deps from requirements.txt — it never imports these FastAPI/typer
-# `app` modules, and dropping them (+ pyproject.toml) removes every signal that
-# made Vercel try to deploy a FastAPI backend instead of our static SPA.
+tests/
+scripts/
+api/
+src/
+requirements.txt
 pyproject.toml
-src/hypersignal/serve.py
-src/hypersignal/cli.py
-
+dashboard/node_modules/
+dashboard/dist/

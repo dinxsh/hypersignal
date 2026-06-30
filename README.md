@@ -123,22 +123,26 @@ The API key never reaches the browser: the FastAPI backend holds it and the Vite
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/dinxsh/hypersignal)
 
-The repo is Vercel-ready out of the box via [`vercel.json`](vercel.json):
-
-- **Static dashboard** builds from `dashboard/` (`outputDirectory: dashboard/dist`).
-- **`GET /api/report`** is a Python serverless function ([`api/report.py`](api/report.py)) that reuses the `hypersignal` engine — same JSON as the CLI/library.
-
-Two ways it runs:
-
-1. **As-is (no config):** the function serves the recorded fixtures, and the dashboard falls back to a bundled real snapshot if the function is cold. The site renders immediately.
-2. **Live:** set `GOLDRUSH_API_KEY` in the Vercel project's Environment Variables. `/api/report` then pulls live HyperEVM + HyperCore data on every request (edge-cached 15s). The key stays server-side — it is only read by the serverless function, never shipped to the browser.
+Vercel deploys the **static dashboard** via [`vercel.json`](vercel.json) (`buildCommand` builds `dashboard/`, output `dashboard/dist`). Out of the box the deployed site renders the **bundled real snapshot** committed at [`dashboard/src/sample-report.json`](dashboard/src/sample-report.json) — no key, no config, no backend. Import the repo and it just works.
 
 ```bash
-# or from the CLI
 npm i -g vercel
 vercel            # import & deploy (uses vercel.json)
-vercel env add GOLDRUSH_API_KEY      # optional, for live data
 ```
+
+> Everything Python is excluded from the Vercel build (see [`.vercelignore`](.vercelignore)) because Vercel's Python backend auto-detection wants to deploy the whole repo as one FastAPI app, which conflicts with a static-SPA-plus-function layout.
+
+**For live data on a hosted dashboard**, run the backend somewhere that handles long-lived Python (Render, Railway, Fly, or a VM) and point the dashboard at it:
+
+```bash
+# wherever you host it:
+GOLDRUSH_API_KEY=cqt_... hypersignal serve        # exposes /report
+
+# build the dashboard against that backend:
+cd dashboard && VITE_API_URL=https://your-backend.example.com npm run build
+```
+
+The committed [`api/report.py`](api/report.py) (a serverless `handler`) and the FastAPI [`serve.py`](src/hypersignal/serve.py) both reuse the same engine, so you can host whichever fits your platform. The key always stays server-side; the browser only ever sees the report JSON.
 
 ## Scaling up
 
