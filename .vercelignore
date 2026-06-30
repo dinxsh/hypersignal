@@ -9,3 +9,9 @@ dashboard/node_modules/
 dashboard/dist/
 *.egg-info/
 .github/
+
+# Keep Vercel's FastAPI auto-detection from triggering on the package metadata.
+# The serverless function (api/report.py) imports hypersignal from src/** via
+# includeFiles and installs deps from requirements.txt — it never needs these.
+pyproject.toml
+

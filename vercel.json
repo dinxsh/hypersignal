@@ -1,14 +1,20 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd dashboard && npm install && npm run build",
-  "outputDirectory": "dashboard/dist",
-  "functions": {
-    "api/report.py": {
-      "includeFiles": "src/**",
-      "maxDuration": 60
+  "builds": [
+    {
+      "src": "dashboard/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
+    },
+    {
+      "src": "api/report.py",
+      "use": "@vercel/python",
+      "config": { "includeFiles": "src/**" }
     }
-  },
-  "rewrites": [
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ],
+  "routes": [
+    { "src": "/api/report", "dest": "/api/report.py" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
