@@ -41,6 +41,16 @@ def create_app(*, offline: bool | None = None) -> FastAPI:
     def _report(coin: str):
         return run(Settings.from_env(), offline=offline, coin=coin)
 
+    @api.get("/")
+    def index():
+        return {
+            "service": "hypersignal",
+            "description": "GoldRush-powered Hyperliquid regime signal API",
+            "mode": "offline" if offline else "live",
+            "endpoints": ["/report", "/signal", "/lending", "/whales", "/flows", "/healthz", "/docs"],
+            "source": "https://github.com/dinxsh/hypersignal",
+        }
+
     @api.get("/signal")
     def signal(coin: str = TARGET_COIN):
         return _report(coin).signal
