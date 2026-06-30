@@ -119,6 +119,27 @@ cd dashboard && npm run dev                      # terminal 2
 
 The API key never reaches the browser: the FastAPI backend holds it and the Vite dev server proxies `/api`.
 
+### Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/dinxsh/hypersignal)
+
+The repo is Vercel-ready out of the box via [`vercel.json`](vercel.json):
+
+- **Static dashboard** builds from `dashboard/` (`outputDirectory: dashboard/dist`).
+- **`GET /api/report`** is a Python serverless function ([`api/report.py`](api/report.py)) that reuses the `hypersignal` engine — same JSON as the CLI/library.
+
+Two ways it runs:
+
+1. **As-is (no config):** the function serves the recorded fixtures, and the dashboard falls back to a bundled real snapshot if the function is cold. The site renders immediately.
+2. **Live:** set `GOLDRUSH_API_KEY` in the Vercel project's Environment Variables. `/api/report` then pulls live HyperEVM + HyperCore data on every request (edge-cached 15s). The key stays server-side — it is only read by the serverless function, never shipped to the browser.
+
+```bash
+# or from the CLI
+npm i -g vercel
+vercel            # import & deploy (uses vercel.json)
+vercel env add GOLDRUSH_API_KEY      # optional, for live data
+```
+
 ## Scaling up
 
 - **Whales:** `batchClearinghouseState` takes 50 wallets per call with **no rate limit**, so a watchlist of thousands is a tight loop. For push instead of poll, use the Streaming API [`walletTxs` firehose](https://goldrush.dev/docs/goldrush-hyperliquid/streaming/wallet-firehose).

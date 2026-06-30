@@ -1,0 +1,11 @@
+.venv/
+_live/
+__pycache__/
+*.pyc
+.pytest_cache/
+tests/
+scripts/
+dashboard/node_modules/
+dashboard/dist/
+*.egg-info/
+.github/

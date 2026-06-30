@@ -34,6 +34,17 @@ The dashboard tries the backend first and falls back to the bundled snapshot if 
 npm run build && npm run preview
 ```
 
+## Deploy (Vercel)
+
+Deploy from the **repo root** (not this folder) — the root [`vercel.json`](../vercel.json) builds this dashboard and wires up the `/api/report` Python serverless function:
+
+```bash
+vercel                              # from repo root
+vercel env add GOLDRUSH_API_KEY     # optional → live data
+```
+
+Without a key the deployment serves recorded fixtures and the dashboard falls back to a bundled real snapshot, so the site always renders. See the root README's "Deploy to Vercel".
+
 ## Data provenance
 
 Each panel is labelled with the GoldRush endpoint behind it:
