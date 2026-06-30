@@ -10,8 +10,12 @@ dashboard/dist/
 *.egg-info/
 .github/
 
-# Keep Vercel's FastAPI auto-detection from triggering on the package metadata.
-# The serverless function (api/report.py) imports hypersignal from src/** via
-# includeFiles and installs deps from requirements.txt — it never needs these.
+# Keep Vercel's FastAPI auto-detection from triggering. The serverless function
+# (api/report.py) imports the hypersignal engine from src/** via includeFiles and
+# installs deps from requirements.txt — it never imports these FastAPI/typer
+# `app` modules, and dropping them (+ pyproject.toml) removes every signal that
+# made Vercel try to deploy a FastAPI backend instead of our static SPA.
 pyproject.toml
+src/hypersignal/serve.py
+src/hypersignal/cli.py
 
