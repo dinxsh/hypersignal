@@ -89,12 +89,12 @@ export function RegimeHero({ signal, markPrice }: { signal: RegimeSignal; markPr
 
         {/* directive */}
         <div className="directive">
-          <div className="kicker">Agent directive</div>
+          <div className="kicker">Agent directive · HYPE vault</div>
           <div>
             <div className={`action ${actClass}`}>{directive.action}</div>
-            <div className="reason">{directive.reason}</div>
+            <div className="reason">{directive.context}</div>
           </div>
-          <span className="tag">derived for HYPE vault allocation</span>
+          <span className="tag">auto-derived from the signal below</span>
         </div>
       </motion.div>
 

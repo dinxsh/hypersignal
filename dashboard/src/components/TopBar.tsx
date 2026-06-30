@@ -29,7 +29,15 @@ export function TopBar({
           <span className="dot" />
           {isLive ? "LIVE · GoldRush" : "SAMPLE SNAPSHOT"}
         </span>
-        <span className="chip">Info API · no rate limits</span>
+        <a
+          className="chip chip-link"
+          href="https://goldrush.dev/docs/goldrush-hyperliquid/info-api/limits"
+          target="_blank"
+          rel="noreferrer"
+          title="GoldRush Hyperliquid Info API — rate limits & caching"
+        >
+          Info API · no rate limits ↗
+        </a>
         {latencyMs != null && <span className="chip">{latencyMs}ms</span>}
         <span className="chip">updated {sinceNow(generatedAt)}</span>
         <button className="refresh" onClick={onRefresh} disabled={refreshing}>

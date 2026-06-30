@@ -65,6 +65,16 @@ export function Gauge({ value }: { value: number }) {
         style={{ filter: "drop-shadow(0 0 5px rgba(77,247,203,0.45))" }}
       />
       <circle cx={cx} cy={cy} r="6" fill="#0d141a" stroke="#4a5763" strokeWidth="1.5" />
+      {/* denomination so the −1..+1 scale reads as bearish..bullish */}
+      <text x="14" y="114" fontSize="8.5" fontFamily="var(--font-mono)" letterSpacing="0.5" fill="#ff6a5a">
+        BEARISH −1
+      </text>
+      <text x="100" y="13" textAnchor="middle" fontSize="8" fontFamily="var(--font-mono)" letterSpacing="1" fill="#7f909d">
+        NEUTRAL 0
+      </text>
+      <text x="186" y="114" textAnchor="end" fontSize="8.5" fontFamily="var(--font-mono)" letterSpacing="0.5" fill="#4df7cb">
+        +1 BULLISH
+      </text>
     </svg>
   );
 }

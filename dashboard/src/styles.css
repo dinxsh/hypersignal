@@ -163,6 +163,15 @@ body::after {
   color: var(--mint);
   border-color: var(--mint-dim);
 }
+.chip-link {
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.18s, border-color 0.18s;
+}
+.chip-link:hover {
+  color: var(--mint);
+  border-color: var(--mint-dim);
+}
 @keyframes pulse {
   0% { box-shadow: 0 0 0 0 rgba(77, 247, 203, 0.5); }
   70% { box-shadow: 0 0 0 7px rgba(77, 247, 203, 0); }
@@ -242,7 +251,12 @@ body::after {
   border-bottom: 1px dashed var(--line);
   padding-bottom: 8px;
 }
-.statline .row .k { color: var(--muted); }
+.statline .row .k {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 11px;
+}
 .statline .row .v { color: var(--text); }
 
 /* gauges */
@@ -469,6 +483,19 @@ body::after {
 }
 .pos { color: var(--mint); }
 .neg { color: var(--coral); }
+
+/* explicit column alignment (overrides the default right-align) */
+.tbl th.c,
+.tbl td.c { text-align: center; }
+.tbl th.r,
+.tbl td.r { text-align: right; }
+
+/* stable, aligned columns for the flows table: wallet | dir | size */
+.flows-tbl { table-layout: fixed; }
+.flows-tbl th:first-child,
+.flows-tbl td:first-child { width: 46%; }
+.flows-tbl .c { width: 22%; }
+.flows-tbl .r { width: 32%; }
 
 /* skew bar */
 .skew {

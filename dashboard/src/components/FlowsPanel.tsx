@@ -34,22 +34,22 @@ export function FlowsPanel({ data }: { data: FlowSnapshot }) {
         <span className="neg">{usdCompact(data.outflow_usd)} out</span>
       </div>
 
-      <table className="tbl" style={{ marginTop: 18 }}>
+      <table className="tbl flows-tbl" style={{ marginTop: 18 }}>
         <thead>
           <tr>
             <th>Wallet</th>
-            <th>Dir</th>
-            <th>Size</th>
+            <th className="c">Dir</th>
+            <th className="r">Size</th>
           </tr>
         </thead>
         <tbody>
           {data.events.slice(0, 6).map((e, i) => (
             <tr key={`${e.hash}-${i}`}>
               <td>{shortAddr(e.wallet)}</td>
-              <td className={e.direction === "in" ? "pos" : "neg"}>
+              <td className={`c ${e.direction === "in" ? "pos" : "neg"}`}>
                 {e.direction === "in" ? "IN" : "OUT"}
               </td>
-              <td>{usdCompact(e.usd)}</td>
+              <td className="r">{usdCompact(e.usd)}</td>
             </tr>
           ))}
           {data.events.length === 0 && (
