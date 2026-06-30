@@ -1,7 +1,7 @@
-# Single Vercel project: one @vercel/python function (api/index.py) whose
-# FastAPI app serves the built dashboard at / and the API at /report.
-# Everything not excluded here is bundled (includeFiles "**" in vercel.json),
-# so keep dashboard/dist and src/ — but drop everything not needed at runtime.
+# NOTE: Vercel applies this repo-root .vercelignore to the WHOLE clone, even
+# for a project whose Root Directory is "dashboard". So it must NOT remove the
+# dashboard's source (package.json / src), or `npm install` there fails.
+# We only drop things no deploy needs.
 .venv/
 _live/
 __pycache__/
@@ -11,9 +11,5 @@ __pycache__/
 .github/
 tests/
 scripts/
+node_modules/
 dashboard/node_modules/
-dashboard/src/
-dashboard/public/
-dashboard/*.config.*
-dashboard/tsconfig*.json
-dashboard/package*.json
