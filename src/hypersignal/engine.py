@@ -7,6 +7,7 @@ API key. ``offline=False`` hits the live GoldRush APIs using GOLDRUSH_API_KEY.
 from __future__ import annotations
 
 import json
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from importlib import resources
 
@@ -53,15 +54,38 @@ def run(settings: Settings, *, offline: bool = False, coin: str = TARGET_COIN) -
             raise RuntimeError(
                 "GOLDRUSH_API_KEY is not set. Set it, or run with --offline to use recorded fixtures."
             )
-        foundational = FoundationalClient(settings.api_key, base_url=settings.foundational_base_url)
-        info = InfoClient(settings.api_key, base_url=settings.info_base_url)
-        try:
-            lending = fetch_lending(foundational, settings)
-            whales = fetch_whales(info, settings, coin)
-            flows = fetch_flows(info, settings)
-        finally:
-            foundational.close()
-            info.close()
+
+        # The three modules hit independent endpoints, so run them concurrently:
+        # wall-clock is the slowest single module, not the sum. Each task owns
+        # its own client and closes it.
+        def _lending():
+            c = FoundationalClient(settings.api_key, base_url=settings.foundational_base_url)
+            try:
+                return fetch_lending(c, settings)
+            finally:
+                c.close()
+
+        def _whales():
+            c = InfoClient(settings.api_key, base_url=settings.info_base_url)
+            try:
+                return fetch_whales(c, settings, coin)
+            finally:
+                c.close()
+
+        def _flows():
+            c = InfoClient(settings.api_key, base_url=settings.info_base_url)
+            try:
+                return fetch_flows(c, settings)
+            finally:
+                c.close()
+
+        with ThreadPoolExecutor(max_workers=3) as ex:
+            f_lending = ex.submit(_lending)
+            f_whales = ex.submit(_whales)
+            f_flows = ex.submit(_flows)
+            lending = f_lending.result()
+            whales = f_whales.result()
+            flows = f_flows.result()
 
     signal = build_signal(lending, whales, flows, settings, coin)
     return HyperSignalReport(

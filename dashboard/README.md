@@ -36,19 +36,14 @@ npm run build && npm run preview
 
 ## Deploy (Vercel)
 
-Deploy from the **repo root** — the root [`vercel.json`](../vercel.json) builds this dashboard to static files. The deployed site renders the bundled real snapshot (`src/sample-report.json`); no key or backend needed.
+This dashboard is **one of two Vercel projects** (the other is the FastAPI API). Create a Vercel project for this folder with **Root Directory: `dashboard`** — Vercel auto-detects Vite. Set env var **`VITE_API_URL`** to the API project's URL for live data; without it the dashboard renders the bundled snapshot (`src/sample-report.json`).
 
 ```bash
-vercel        # from repo root
+vercel          # Root Directory: dashboard
+# set VITE_API_URL = https://<your-api-project>.vercel.app
 ```
 
-For a hosted dashboard with **live** data, run the backend elsewhere and build against it:
-
-```bash
-VITE_API_URL=https://your-backend.example.com npm run build
-```
-
-See the root README's "Deploy to Vercel" for the full rationale.
+Full two-project walkthrough: see the root README's "Deploy everything to Vercel".
 
 ## Data provenance
 

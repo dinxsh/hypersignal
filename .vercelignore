@@ -1,8 +1,7 @@
-# Vercel deploys ONLY the static dashboard. Everything Python — the engine,
-# the serverless function, the FastAPI/CLI backend — is excluded so Vercel's
-# Python/FastAPI auto-detection never fires. The dashboard renders the bundled
-# real snapshot; for live data on a hosted deploy, run the backend elsewhere
-# and point VITE_API_URL at it (see README).
+# This applies to the API (Python/FastAPI) Vercel project, whose Root
+# Directory is the repo root. It deploys api/index.py + src/** + requirements.
+# The dashboard is a SEPARATE Vercel project with Root Directory "dashboard",
+# so it is excluded here.
 .venv/
 _live/
 __pycache__/
@@ -12,9 +11,4 @@ __pycache__/
 .github/
 tests/
 scripts/
-api/
-src/
-requirements.txt
-pyproject.toml
-dashboard/node_modules/
-dashboard/dist/
+dashboard/

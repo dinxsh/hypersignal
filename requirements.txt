@@ -1,5 +1,5 @@
-# Dependencies for the Vercel Python serverless function (api/report.py).
-# Kept minimal: the hypersignal engine core does not import FastAPI/typer.
+# Dependencies for the Vercel Python (FastAPI) deployment — api/index.py.
+fastapi>=0.110
 httpx>=0.27
 pydantic>=2.6
 eth-utils>=4.1

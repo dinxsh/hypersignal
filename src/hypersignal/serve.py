@@ -19,7 +19,10 @@ from .engine import run
 
 def create_app(*, offline: bool | None = None) -> FastAPI:
     if offline is None:
-        offline = os.environ.get("HYPERSIGNAL_OFFLINE", "").lower() in {"1", "true", "yes"}
+        forced = os.environ.get("HYPERSIGNAL_OFFLINE", "").lower() in {"1", "true", "yes"}
+        # Without a key, serve fixtures instead of erroring — so a fresh deploy
+        # renders out of the box and only goes live once GOLDRUSH_API_KEY is set.
+        offline = forced or not os.environ.get("GOLDRUSH_API_KEY")
 
     api = FastAPI(
         title="hypersignal",

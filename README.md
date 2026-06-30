@@ -119,30 +119,34 @@ cd dashboard && npm run dev                      # terminal 2
 
 The API key never reaches the browser: the FastAPI backend holds it and the Vite dev server proxies `/api`.
 
-### Deploy to Vercel
+### Deploy everything to Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/dinxsh/hypersignal)
+Run both the API and the dashboard on Vercel as **two projects from this one repo**. Each gets its own Root Directory, so Vercel's framework detection stays unambiguous (the failure mode when you try to make one project be both a Python app and a static site).
 
-Vercel deploys the **static dashboard** via [`vercel.json`](vercel.json) (`buildCommand` builds `dashboard/`, output `dashboard/dist`). Out of the box the deployed site renders the **bundled real snapshot** committed at [`dashboard/src/sample-report.json`](dashboard/src/sample-report.json) — no key, no config, no backend. Import the repo and it just works.
+**Project 1 — API (FastAPI, Python).** Live HYPE data, rate-limit-free, behind your key.
+
+1. New Project → import `dinxsh/hypersignal` → **Root Directory: `.`** (repo root).
+2. Vercel detects Python and uses the entrypoint declared in [`pyproject.toml`](pyproject.toml) (`[tool.vercel] entrypoint = "api.index:app"` → [`api/index.py`](api/index.py)), installing [`requirements.txt`](requirements.txt).
+3. Add Environment Variable **`GOLDRUSH_API_KEY`** = your key. Deploy.
+4. You now have e.g. `https://hypersignal-api.vercel.app` serving `GET /report`, `/signal`, `/healthz`. Without the key it serves fixtures; with it, live (≈4–5s/request, edge-friendly).
+
+**Project 2 — Dashboard (static, Vite).**
+
+1. New Project → import the same repo → **Root Directory: `dashboard`**.
+2. Vercel auto-detects Vite (build `npm run build`, output `dist`).
+3. Add Environment Variable **`VITE_API_URL`** = Project 1's URL (e.g. `https://hypersignal-api.vercel.app`). Deploy.
+4. The dashboard fetches `${VITE_API_URL}/report` and renders live. If the API is unreachable it falls back to the bundled snapshot, so it never blanks.
 
 ```bash
+# the same, from the CLI (run twice, pick the root dir each time)
 npm i -g vercel
-vercel            # import & deploy (uses vercel.json)
+vercel            # Project 1: root ".",  set GOLDRUSH_API_KEY
+vercel            # Project 2: root "dashboard", set VITE_API_URL
 ```
 
-> Everything Python is excluded from the Vercel build (see [`.vercelignore`](.vercelignore)) because Vercel's Python backend auto-detection wants to deploy the whole repo as one FastAPI app, which conflicts with a static-SPA-plus-function layout.
+The key lives only in the API project's env — the browser only ever sees report JSON (CORS is open on the API). `.vercelignore` keeps `dashboard/` out of the API build and vice versa.
 
-**For live data on a hosted dashboard**, run the backend somewhere that handles long-lived Python (Render, Railway, Fly, or a VM) and point the dashboard at it:
-
-```bash
-# wherever you host it:
-GOLDRUSH_API_KEY=cqt_... hypersignal serve        # exposes /report
-
-# build the dashboard against that backend:
-cd dashboard && VITE_API_URL=https://your-backend.example.com npm run build
-```
-
-The committed [`api/report.py`](api/report.py) (a serverless `handler`) and the FastAPI [`serve.py`](src/hypersignal/serve.py) both reuse the same engine, so you can host whichever fits your platform. The key always stays server-side; the browser only ever sees the report JSON.
+> **Timeout note:** a live `/report` is ~4–5s (three GoldRush modules fetched concurrently). That fits Vercel's default function limit; if you grow the whale watchlist into the thousands, raise the function `maxDuration` or move flows to the [Pipeline API](https://goldrush.dev/docs/goldrush-pipeline-api/normalizers/hypercore).
 
 ## Scaling up
 

@@ -14,6 +14,7 @@ as ``hl_deposits`` / ``hl_withdrawals`` tables via the GoldRush Pipeline API.
 from __future__ import annotations
 
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 from pydantic import BaseModel
 
@@ -119,9 +120,22 @@ def parse_flows(
 
 
 def fetch_flows(client, settings: Settings) -> FlowSnapshot:
-    """Live fetch: ledger updates for every watched wallet over the window."""
+    """Live fetch: ledger updates for every watched wallet over the window.
+
+    Wallets are fetched concurrently (httpx.Client is thread-safe) so latency
+    is one round-trip, not N -- important under a serverless timeout.
+    """
     start_ms = int((time.time() - settings.thresholds.flow_lookback_hours * 3600) * 1000)
+    wallets = settings.whale_watchlist
     updates_by_wallet: dict[str, list[dict]] = {}
-    for wallet in settings.whale_watchlist:
-        updates_by_wallet[wallet] = client.user_non_funding_ledger_updates(wallet, start_ms)
+
+    def _fetch(wallet: str) -> list[dict]:
+        try:
+            return client.user_non_funding_ledger_updates(wallet, start_ms)
+        except Exception:
+            return []
+
+    with ThreadPoolExecutor(max_workers=min(8, max(1, len(wallets)))) as ex:
+        for wallet, updates in zip(wallets, ex.map(_fetch, wallets)):
+            updates_by_wallet[wallet] = updates
     return parse_flows(updates_by_wallet, settings)
