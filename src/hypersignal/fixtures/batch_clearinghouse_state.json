@@ -1,0 +1,46 @@
+[
+  {
+    "user": "0xb0a55f13d22f66e6d495ac98113841b2326e9540",
+    "assetPositions": [
+      {
+        "position": {
+          "coin": "HYPE",
+          "szi": "100000",
+          "positionValue": "3850000",
+          "liquidationPx": "34.0"
+        }
+      }
+    ]
+  },
+  {
+    "user": "0x31ca8395cf837de08b24da3f660e77761dfb974b",
+    "assetPositions": [
+      {
+        "position": {
+          "coin": "HYPE",
+          "szi": "50000",
+          "positionValue": "1925000",
+          "liquidationPx": "36.0"
+        }
+      }
+    ]
+  },
+  {
+    "user": "0xecb63caa47c7c4e77f60f1ce858cf28dc2b82b00",
+    "assetPositions": [
+      {
+        "position": {
+          "coin": "HYPE",
+          "szi": "-20000",
+          "positionValue": "770000",
+          "liquidationPx": "44.0"
+        }
+      }
+    ]
+  },
+  {
+    "error": "upstream_error",
+    "user": "0x73f9c53a8b15e43056d5599f6488ac9a8730f85d",
+    "message": "overall batch timeout exceeded"
+  }
+]

@@ -1,0 +1,41 @@
+{
+  "0xb0a55f13d22f66e6d495ac98113841b2326e9540": [
+    {
+      "time": 1782900000000,
+      "hash": "0xaaa1",
+      "delta": {
+        "type": "deposit",
+        "usdc": "1500000"
+      }
+    },
+    {
+      "time": 1782900100000,
+      "hash": "0xaaa2",
+      "delta": {
+        "type": "deposit",
+        "usdc": "5000"
+      }
+    }
+  ],
+  "0x31ca8395cf837de08b24da3f660e77761dfb974b": [
+    {
+      "time": 1782901000000,
+      "hash": "0xbbb1",
+      "delta": {
+        "type": "deposit",
+        "usdc": "800000"
+      }
+    }
+  ],
+  "0xecb63caa47c7c4e77f60f1ce858cf28dc2b82b00": [
+    {
+      "time": 1782902000000,
+      "hash": "0xccc1",
+      "delta": {
+        "type": "withdraw",
+        "usdc": "400000"
+      }
+    }
+  ],
+  "0x73f9c53a8b15e43056d5599f6488ac9a8730f85d": []
+}

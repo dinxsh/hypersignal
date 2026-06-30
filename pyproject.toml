@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hypersignal"
+version = "0.1.0"
+description = "GoldRush-powered Hyperliquid signal engine: live HyperEVM lending rates, HyperCore whale positioning, and large stablecoin/HYPE flows, fused into one regime signal for AI yield agents."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "dinxsh" }]
+keywords = ["hyperliquid", "hyperevm", "hypercore", "goldrush", "covalent", "defi", "lending", "whales", "trading-signals"]
+
+dependencies = [
+    "httpx>=0.27",
+    "pydantic>=2.6",
+    "typer>=0.12",
+    "eth-utils>=4.1",
+    "eth-hash[pycryptodome]>=0.7",
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0"]
+
+[project.scripts]
+hypersignal = "hypersignal.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/dinxsh/hypersignal"
+"GoldRush docs" = "https://goldrush.dev/docs/goldrush-hyperliquid/overview"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hypersignal"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
