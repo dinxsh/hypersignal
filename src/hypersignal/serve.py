@@ -11,6 +11,7 @@ from __future__ import annotations
 import os
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from .config import Settings, TARGET_COIN
 from .engine import run
@@ -24,6 +25,14 @@ def create_app(*, offline: bool | None = None) -> FastAPI:
         title="hypersignal",
         version="0.1.0",
         description="GoldRush-powered Hyperliquid regime signal for AI yield agents.",
+    )
+
+    # The Vite dashboard (and any browser client) calls this API cross-origin.
+    api.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_methods=["GET"],
+        allow_headers=["*"],
     )
 
     def _report(coin: str):

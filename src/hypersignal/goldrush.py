@@ -75,6 +75,11 @@ class FoundationalClient:
         )
         return data.get("items", [])
 
+    def latest_block(self, chain: str) -> int:
+        data = self._get(f"/{chain}/block_v2/latest/")
+        items = data.get("items", [])
+        return int(items[0]["height"]) if items else 0
+
     def token_balances(self, chain: str, address: str, *, quote_currency: str = "USD") -> list[dict[str, Any]]:
         data = self._get(
             f"/{chain}/address/{address}/balances_v2/",

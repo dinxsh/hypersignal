@@ -6,6 +6,10 @@
 
 It is built entirely on the [GoldRush](https://goldrush.dev/docs) APIs, so it scales past the public Hyperliquid rate limits: the [Info API](https://goldrush.dev/docs/goldrush-hyperliquid/info-api/overview) is a drop-in, **rate-limit-free** replacement for `api.hyperliquid.xyz/info`, and the [Foundational API](https://goldrush.dev/docs/chains/hyperevm) indexes HyperEVM directly.
 
+![HYPE Regime Cockpit — the dashboard rendering live GoldRush data](dashboard/preview.png)
+
+> The screenshot above is **live** data: the bias gauge, lending APRs, whale skew, and HyperCore flows are all pulled through GoldRush in real time. See [`dashboard/`](dashboard/).
+
 ---
 
 ## Why this exists
@@ -99,6 +103,21 @@ print(report.lending.by_symbol("USDe").borrow_apr_pct)
 ```
 
 See [`examples/agent_consumer.py`](examples/agent_consumer.py) for a minimal allocation-agent loop.
+
+## Dashboard
+
+A custom **Vite + React** cockpit lives in [`dashboard/`](dashboard/) — a dark quant-terminal UI built for Harmonix's vault allocator: a regime verdict, a directional-bias gauge, the **agent directive** (ADD / HOLD / REDUCE / DE-RISK), and the three source panels each labelled with the GoldRush endpoint behind it.
+
+```bash
+# standalone — bundled real snapshot, no key needed
+cd dashboard && npm install && npm run dev
+
+# live — key stays server-side, dashboard proxies /api -> :8000
+GOLDRUSH_API_KEY=cqt_... hypersignal serve      # terminal 1
+cd dashboard && npm run dev                      # terminal 2
+```
+
+The API key never reaches the browser: the FastAPI backend holds it and the Vite dev server proxies `/api`.
 
 ## Scaling up
 

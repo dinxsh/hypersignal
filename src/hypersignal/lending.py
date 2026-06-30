@@ -110,10 +110,21 @@ def parse_lending(events: list[dict]) -> LendingSnapshot:
 
 
 def fetch_lending(client: FoundationalClient, settings: Settings) -> LendingSnapshot:
-    """Live fetch: scan recent HyperLend Pool events and decode reserve rates."""
+    """Live fetch: scan recent HyperLend Pool events and decode reserve rates.
+
+    The events-by-address endpoint requires a block window, so we anchor to the
+    chain tip and look back ``lending_lookback_blocks``. Events come back
+    most-recent-first, so the latest ReserveDataUpdated per reserve is kept.
+    """
+    latest = client.latest_block(settings.chain_name)
+    starting_block = max(0, latest - settings.thresholds.lending_lookback_blocks)
+    # Note: only starting-block is sent. The events index can lag the block
+    # tip by a few blocks, so pinning ending-block to the tip 404s; letting it
+    # default to the current indexed height avoids that race.
     events = client.log_events_by_contract(
         settings.chain_name,
         HYPERLEND_POOL,
+        starting_block=starting_block,
         page_size=1000,
     )
     return parse_lending(events)

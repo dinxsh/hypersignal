@@ -15,8 +15,20 @@ htmlcov/
 .env
 *.local
 
+# Node / Vite
+node_modules/
+dist/
+*.tsbuildinfo
+# tsc -b composite emit from vite.config.ts
+dashboard/vite.config.js
+dashboard/vite.config.d.ts
+
+# Scratch (live API response captures)
+_live/
+
 # OS / editor
 .DS_Store
 Thumbs.db
 .idea/
 .vscode/
+.gstack/

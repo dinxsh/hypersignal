@@ -1,0 +1,166 @@
+{
+  "generated_at": "2026-06-30T08:32:34Z",
+  "mode": "live",
+  "signal": {
+    "coin": "HYPE",
+    "directional_bias": -0.996,
+    "volatility_score": 0.506,
+    "regime": "risk-off / choppy",
+    "drivers": [
+      "net $9,612,300 withdrawn from HyperCore (distribution)",
+      "whale positioning crowded short (skew -0.99)",
+      "HYPE lending: 0.60% supply / 0.96% borrow APR",
+      "funding +0.0013%/hr"
+    ],
+    "hype_supply_apr": 0.5958,
+    "hype_borrow_apr": 0.9649,
+    "funding_rate": 0.0000125,
+    "whale_skew": -0.9893,
+    "net_flow_usd": -9612300.0
+  },
+  "lending": {
+    "market": "HyperLend",
+    "pool": "0x00A89d7a5A02160f20150EbEA7a2b5E4879A1A8b",
+    "reserves": [
+      {
+        "symbol": "0x068f321f",
+        "reserve": "0x068f321fa8fb9f0d135f290ef6a3e2813e1c8a29",
+        "kind": "unknown",
+        "supply_apr_pct": 11.203,
+        "borrow_apr_pct": 17.9942,
+        "block_height": 39172144,
+        "updated_at": "2026-06-30T02:12:31Z"
+      },
+      {
+        "symbol": "0x94e8396e",
+        "reserve": "0x94e8396e0869c9f2200760af0621afd240e1cf38",
+        "kind": "unknown",
+        "supply_apr_pct": 0.0023,
+        "borrow_apr_pct": 0.0433,
+        "block_height": 39167067,
+        "updated_at": "2026-06-30T00:49:17Z"
+      },
+      {
+        "symbol": "0x9fdbda0a",
+        "reserve": "0x9fdbda0a5e284c32744d2f17ee5c74b284993463",
+        "kind": "unknown",
+        "supply_apr_pct": 0.1317,
+        "borrow_apr_pct": 0.97,
+        "block_height": 39175612,
+        "updated_at": "2026-06-30T03:09:22Z"
+      },
+      {
+        "symbol": "0xbe6727b5",
+        "reserve": "0xbe6727b535545c67d5caa73dea54865b92cf7907",
+        "kind": "unknown",
+        "supply_apr_pct": 6.8091,
+        "borrow_apr_pct": 10.5811,
+        "block_height": 39167935,
+        "updated_at": "2026-06-30T01:03:31Z"
+      },
+      {
+        "symbol": "0xfd739d4e",
+        "reserve": "0xfd739d4e423301ce9385c1fb8850539d657c296d",
+        "kind": "unknown",
+        "supply_apr_pct": 0.0,
+        "borrow_apr_pct": 0.0006,
+        "block_height": 39177339,
+        "updated_at": "2026-06-30T03:37:41Z"
+      },
+      {
+        "symbol": "USDC",
+        "reserve": "0xb88339cb7199b77e23db6e890353e22632ba630f",
+        "kind": "stable",
+        "supply_apr_pct": 5.352,
+        "borrow_apr_pct": 7.0443,
+        "block_height": 39179932,
+        "updated_at": "2026-06-30T04:20:11Z"
+      },
+      {
+        "symbol": "USDT0",
+        "reserve": "0xb8ce59fc3717ada4c02eadf9682a9e934f625ebb",
+        "kind": "stable",
+        "supply_apr_pct": 4.2704,
+        "borrow_apr_pct": 8.3303,
+        "block_height": 39179192,
+        "updated_at": "2026-06-30T04:08:03Z"
+      },
+      {
+        "symbol": "USDe",
+        "reserve": "0x5d3a1ff2b6bab83b63cd9ad0787074081a52ef34",
+        "kind": "stable",
+        "supply_apr_pct": 7.4688,
+        "borrow_apr_pct": 11.4893,
+        "block_height": 39179942,
+        "updated_at": "2026-06-30T04:20:21Z"
+      },
+      {
+        "symbol": "wHYPE",
+        "reserve": "0x5555555555555555555555555555555555555555",
+        "kind": "native",
+        "supply_apr_pct": 0.5958,
+        "borrow_apr_pct": 0.9649,
+        "block_height": 39179846,
+        "updated_at": "2026-06-30T04:18:47Z"
+      }
+    ]
+  },
+  "whales": {
+    "coin": "HYPE",
+    "market": {
+      "coin": "HYPE",
+      "mark_price": 65.318,
+      "funding_rate": 0.0000125,
+      "open_interest": 20908282.02,
+      "day_volume": 574695744.9415113
+    },
+    "wallets_scanned": 4,
+    "wallets_with_position": 2,
+    "long_notional_usd": 19547.06,
+    "short_notional_usd": 3628998.19,
+    "net_notional_usd": -3609451.13,
+    "skew": -0.9893,
+    "crowded": true,
+    "near_liquidation": 0,
+    "positioning": "crowded short"
+  },
+  "flows": {
+    "window_hours": 24,
+    "threshold_usd": 100000.0,
+    "wallets_scanned": 4,
+    "inflow_usd": 0.0,
+    "outflow_usd": 9612300.0,
+    "net_flow_usd": -9612300.0,
+    "large_event_count": 3,
+    "direction": "distribution",
+    "events": [
+      {
+        "wallet": "0xecb63caa47c7c4e77f60f1ce858cf28dc2b82b00",
+        "direction": "out",
+        "type": "withdraw",
+        "usd": 3356841.0,
+        "token": "USDC",
+        "time_ms": 1782752483654,
+        "hash": "0x0a49ca17dfc8d127914551940320d5463e077f13a18f2440058ca8b36cc02d29"
+      },
+      {
+        "wallet": "0xecb63caa47c7c4e77f60f1ce858cf28dc2b82b00",
+        "direction": "out",
+        "type": "withdraw",
+        "usd": 3260276.0,
+        "token": "USDC",
+        "time_ms": 1782738610773,
+        "hash": "0x033274e1e97e1cad5476147d45a2acf61e0dfde28af2209c9a25e659d41f4b11"
+      },
+      {
+        "wallet": "0xecb63caa47c7c4e77f60f1ce858cf28dc2b82b00",
+        "direction": "out",
+        "type": "withdraw",
+        "usd": 2995183.0,
+        "token": "USDC",
+        "time_ms": 1782779580969,
+        "hash": "0xad015b5ea07cfeb38dc2bcd48b8c60687ba457a40275d98d204c12a83b93589e"
+      }
+    ]
+  }
+}
