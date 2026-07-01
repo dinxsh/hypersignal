@@ -26,8 +26,8 @@ export function LendingPanel({ data }: { data: LendingSnapshot }) {
         <thead>
           <tr>
             <th>Asset</th>
-            <th>Supply APR</th>
-            <th>Borrow APR</th>
+            <th className="r">Supply APR</th>
+            <th className="r">Borrow APR</th>
           </tr>
         </thead>
         <tbody>
@@ -41,8 +41,8 @@ export function LendingPanel({ data }: { data: LendingSnapshot }) {
                     <span className="badge">{r.kind}</span>
                   </span>
                 </td>
-                <td className="pos">{pct(r.supply_apr_pct)}</td>
-                <td>{pct(r.borrow_apr_pct)}</td>
+                <td className="pos r">{pct(r.supply_apr_pct)}</td>
+                <td className="r">{pct(r.borrow_apr_pct)}</td>
               </tr>
             );
           })}

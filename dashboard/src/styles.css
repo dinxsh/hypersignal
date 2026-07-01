@@ -13,8 +13,8 @@
   --line-2: #243340;
 
   --text: #e9f1f4;
-  --muted: #7f909d;
-  --faint: #4a5763;
+  --muted: #aebcc8;
+  --faint: #8494a1;
 
   --mint: #4df7cb;
   --mint-dim: #1f5c4d;
@@ -468,11 +468,13 @@ body::after {
   border-color: var(--line-2);
 }
 .panel-head {
+  margin-bottom: 18px;
+}
+.panel-head-row {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 18px;
 }
 .panel-head .title {
   font-family: var(--font-display);
@@ -507,7 +509,7 @@ body::after {
 .tbl th {
   text-align: right;
   font-weight: 500;
-  color: var(--faint);
+  color: var(--muted);
   font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;

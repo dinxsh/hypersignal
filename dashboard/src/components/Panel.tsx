@@ -22,13 +22,13 @@ export function Panel({
       transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="panel-head">
-        <div>
+        <div className="panel-head-row">
           <div className="title">{title}</div>
-          <div className="sub">{sub}</div>
+          <span className="endpoint" title="GoldRush endpoint backing this panel">
+            {endpoint}
+          </span>
         </div>
-        <span className="endpoint" title="GoldRush endpoint backing this panel">
-          {endpoint}
-        </span>
+        <div className="sub">{sub}</div>
       </div>
       {children}
     </motion.section>
